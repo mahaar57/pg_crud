@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  postgres:
+    build: backend/postgres-dev/
+    container_name: postgres
+    ports:
+      - $POSTGRES_PORT:$POSTGRES_PORT
+    restart: always
+    # volumes:
+    #   - ./backend/db_data/:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB_LIST: $POSTGRES_DB_LIST
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - $MACHINE_ADMINER_PORT:$ADMINER_PORT
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+
+  auth:
+    build: ./backend/auth/
+    container_name: auth
+    hostname: $AUTH_HOSTNAME
+    command: sh ./docker-entrypoint.sh
+    restart: always
+    ports:
+      - $AUTH_PORT:$AUTH_PORT
+    environment:
+      AUTH_PORT: $AUTH_PORT
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_HOST: $POSTGRES_HOST
+      POSTGRES_DATABASE: $AUTH_DB
