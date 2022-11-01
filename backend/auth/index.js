@@ -8,6 +8,7 @@ const { dbConnection } = require("./pg/dbconfig");
 const { boolean } = require("joi");
 dotenv.config();
 
+dbConnection();
 app.use(cors());
 app.use(express.json());
 app.unsubscribe(bodyParser.json());
